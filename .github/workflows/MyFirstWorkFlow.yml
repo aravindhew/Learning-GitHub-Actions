@@ -1,7 +1,9 @@
 name: my-first-workflow
-on:
-  schedules:
+on: 
+  push:  
+  schedule:
     - cron: '0 0 * * *' # This will run the workflow every day at midnight
+  workflow_dispatch: # This allows you to manually trigger the workflow from the GitHub Actions tab
 jobs:
   job1:
     name: job1
