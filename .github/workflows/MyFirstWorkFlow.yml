@@ -23,7 +23,7 @@ jobs:
               echo "pwd: $(pwd)" > myartifact.txt \
               mkdir -p artifacts
               echo $(ls -lrth) >> artifacts/list.txt
-              cat artifacts/myartifact.txt
+              cat artifacts/artifacts.txt
               echo $(hostname) >> artifacts/hostname.txt
         - name: Upload artifact
           uses: actions/upload-artifact@v5.0.0
