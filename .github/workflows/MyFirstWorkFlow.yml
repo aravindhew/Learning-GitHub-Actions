@@ -84,6 +84,8 @@ jobs:
           uses: actions/download-artifact@v5.0.0
           with:
             name: directory-artifact
+            path: artifacts
+
         - name: show artifact content
           run: |
               pwd
