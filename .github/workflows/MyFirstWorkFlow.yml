@@ -20,11 +20,33 @@ jobs:
 
         - name: Step 3
           run: |
-              echo "pwd: $(pwd)" > myartifact.txt 
-              ls -lrth >> myartifact.txt
-              cat myartifact.txt
+              echo "pwd: $(pwd)" > myartifact.txt \
+              mkdir -p artifacts
+              echo $(ls -lrth) >> artifacts/list.txt
+              cat artifacts/myartifact.txt
+              echo $(hostname) >> artifacts/hostname.txt
         - name: Upload artifact
           uses: actions/upload-artifact@v5.0.0
           with:
             name: my-artifact   
             path: ./myartifact.txt
+        - name: Upload artifact
+          uses: actions/upload-artifact@v5.0.0
+          with:
+            name: directory-artifact
+            path: artifacts
+        - name: upload from multiple paths
+          uses: actions/upload-artifact@v5.0.0
+          with:
+            name: multiple-artifacts
+            path: |
+              ./myartifact.txt
+              ./artifacts
+        - name: upload multiple with exclusions
+          uses: actions/upload-artifact@v5.0.0
+          with:
+            name: wildcard-artifacts
+            path: |
+              ./myartifact.txt
+              ./artifacts/*
+              !**/hostname.txt
