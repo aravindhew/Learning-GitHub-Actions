@@ -2,7 +2,7 @@ name: my-furst-workflow
 on: [push]
 jobs:
   job1:
-    name: Step 1
+    name: job1
     runs-on: ubuntu-latest
     steps:
       - name: Step 1.1
