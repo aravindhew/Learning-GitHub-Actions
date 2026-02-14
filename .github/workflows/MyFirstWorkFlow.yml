@@ -1,2 +1,11 @@
 name: my-furst-workflow
 on: [push]
+jobs:
+  job1:
+    name: Step 1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Step 1.1
+        run: echo "This is step 1.1"
+      - name: Step 1.2
+        run: echo "This is step 1.2"
