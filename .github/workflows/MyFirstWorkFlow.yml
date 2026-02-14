@@ -9,6 +9,8 @@ jobs:
         run: echo "This is step 1.1"
       - name: Step 1.2
         run: echo "This is step 1.2"
+      - name: calling sleep command
+        run: sleep 30
   job2:
     name: job2
     runs-on: ubuntu-latest
@@ -17,3 +19,5 @@ jobs:
         run: echo "This is step 2.1"
       - name: Step 2.2
         run: echo "This is step 2.2"
+      - name: calling sleep command
+        run: sleep 30
