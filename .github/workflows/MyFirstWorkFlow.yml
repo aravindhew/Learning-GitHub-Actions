@@ -20,7 +20,7 @@ jobs:
 
         - name: Step 3
           run: |
-              echo "pwd: $(pwd)" > myartifact.txt \
+              echo "pwd: $(pwd)" > myartifact.txt 
               mkdir -p artifacts
               echo $(ls -lrth) >> artifacts/list.txt
               cat artifacts/list.txt
