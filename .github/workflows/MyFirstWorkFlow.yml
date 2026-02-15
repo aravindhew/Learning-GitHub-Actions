@@ -5,7 +5,7 @@ on:
       - dev
       - feature-*
       - main
-  workflow_dispatch: # This allows you to manually trigger the workflow from the GitHub Actions tab
+  workflow_dispatch: 
 env:
   ENV_TYPE: dev
   APP_USER: thinknyx
