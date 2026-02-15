@@ -1,8 +1,10 @@
 name: my-first-workflow
-on: 
+on:
   pull_request:
-      branches:
-        - main
+    branches:
+      - dev
+      - feature-*
+      - main
   push:  
     branches:
       - dev
@@ -57,7 +59,4 @@ jobs:
               pwd
               ls -lrth
               cat myartifact.txt
-        - name: step for PR demos
-          run: |
-              exit 1
  
