@@ -4,6 +4,10 @@ on:
       branches:
         - main
   push:  
+    branches:
+      - dev
+      - feature-*
+      - main
   schedule:
     - cron: '0 0 12 * *' # This will run the workflow every day at midnight
   workflow_dispatch: # This allows you to manually trigger the workflow from the GitHub Actions tab
@@ -33,26 +37,6 @@ jobs:
           with:
             name: my-artifact   
             path: ./myartifact.txt
-        - name: Upload artifact
-          uses: actions/upload-artifact@v5.0.0
-          with:
-            name: directory-artifact
-            path: artifacts
-        - name: upload from multiple paths
-          uses: actions/upload-artifact@v5.0.0
-          with:
-            name: multiple-artifacts
-            path: |
-              ./myartifact.txt
-              ./artifacts
-        - name: upload multiple with exclusions
-          uses: actions/upload-artifact@v5.0.0
-          with:
-            name: wildcard-artifacts
-            path: |
-              ./myartifact.txt
-              ./artifacts/*
-              !**/hostname.txt
 
   job2:
     name: job2
@@ -73,25 +57,4 @@ jobs:
               pwd
               ls -lrth
               cat myartifact.txt
-  job3:
-    name: job3
-    runs-on: ubuntu-latest
-    needs: job1
-    steps:
-        - name: Step 1    
-          run: |
-             pwd
-             ls -lrth
-
-        - name: Download directory artifact
-          uses: actions/download-artifact@v5.0.0
-          with:
-            name: directory-artifact
-            path: artifacts
-
-        - name: show artifact content
-          run: |
-              pwd
-              ls -lrth
-              cat artifacts/list.txt
-              cat artifacts/hostname.txt
+ 
