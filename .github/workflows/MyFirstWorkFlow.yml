@@ -69,3 +69,6 @@ jobs:
         - name: refference env variable
           run: |
             echo "[Info Running Deployment for $ENV_TYPE]:  with user : $APP_USER, on port: $APP_PORT"
+        - name: reffereing repository password
+          run: |
+            echo "The repository password is ${{ secrets.APP_PASSWORD }}"
