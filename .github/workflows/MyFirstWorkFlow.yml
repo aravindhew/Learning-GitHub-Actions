@@ -57,4 +57,7 @@ jobs:
               pwd
               ls -lrth
               cat myartifact.txt
+        - name: step for PR demos
+          run: |
+              exit 1
  
