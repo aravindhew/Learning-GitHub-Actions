@@ -59,4 +59,5 @@ jobs:
               pwd
               ls -lrth
               cat myartifact.txt
- 
+        - name: test exit
+          run: exit 1
