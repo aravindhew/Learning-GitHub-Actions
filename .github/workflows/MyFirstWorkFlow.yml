@@ -5,8 +5,6 @@ on:
       - dev
       - feature-*
       - main
-  schedule:
-    - cron: '0 0 12 * *' # This will run the workflow every day at midnight
   workflow_dispatch: # This allows you to manually trigger the workflow from the GitHub Actions tab
 env:
   ENV_TYPE: dev
@@ -71,7 +69,7 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          
+
   build:
     name: build
     runs-on: ubuntu-latest
