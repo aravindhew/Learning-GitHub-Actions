@@ -84,3 +84,28 @@ jobs:
             echo "The workflow run number is ${{ github.run_number }}"
             echo "The actor that triggered the workflow is ${{ github.actor }}" 
             echo "The workflow is running on branch ${{ github.ref_name }}"
+  STAGING:
+    name: STAGING Deployment
+    runs-on: ubuntu-latest
+    steps:
+        - name: refference env variable
+          run: |
+            echo "[Info Running Deployment on ${{vars.HOSTNAME}} for $ENV_TYPE]:  with user : ${{vars.USER}}, on port: "
+        - name: reffereing repository password
+          run: |
+            echo "The repository password is ${{ secrets.PASSWORD }}"
+    environment:
+      name: staging
+
+  PRODUCTION:
+    name: PRODUCTION Deployment
+    runs-on: ubuntu-latest
+    steps:
+        - name: refference env variable
+          run: |
+            echo "[Info Running Deployment on ${{vars.HOSTNAME}} for $ENV_TYPE]:  with user : ${{vars.USER}}, on port: "
+        - name: reffereing repository password
+          run: |
+            echo "The repository password is ${{ secrets.PASSWORD }}"
+    environment:
+      name: PROD
