@@ -82,4 +82,5 @@ jobs:
             echo "The event that triggered the workflow is ${{ github.event_name }}"
             echo "The workflow run ID is ${{ github.run_id }}"
             echo "The workflow run number is ${{ github.run_number }}"
-            echo "The actor that triggered the workflow is ${{ github.actor }}"
+            echo "The actor that triggered the workflow is ${{ github.actor }}" 
+            echo "The workflow is running on branch ${{ github.ref_name }}"
