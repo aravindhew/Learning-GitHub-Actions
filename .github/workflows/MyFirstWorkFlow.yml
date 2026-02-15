@@ -18,96 +18,47 @@ env:
 
 
 jobs:
-  job1:
-    name: job1
+  unit-test:
+    name: unit-test
     runs-on: ubuntu-latest
     steps:
-        - name: Step 1    
-          run: |
-             pwd
-             ls -lrth
-             hostname
-
         - name: checkout    
           uses: actions/checkout@v5.0.0
-
-        - name: Step 3
+        - name: setup python
+          uses: actions/setup-python@v6.0.0
+          with:
+            python-version: '3.x'
+        - name: install dependencies
           run: |
-              echo "pwd: $(pwd)" > myartifact.txt 
-              mkdir -p artifacts
-              echo $(ls -lrth) >> artifacts/list.txt
-              cat artifacts/list.txt
-              echo $(hostname) >> artifacts/hostname.txt
-        - name: Upload single file
+             python -m pip install --upgrade pip
+             pip install -r requirements.txt
+        - name: run unit tests
+          run: |
+             mkdir -p test-reports
+             pytest --junitxml=test-reports/results.xml --cov=. --cov-report=xml --cov-report=term-missing -v
+        - name: Upload test report
           uses: actions/upload-artifact@v5.0.0
           with:
-            name: my-artifact   
-            path: ./myartifact.txt
-        
-
-  job2:
-    name: job2
+            name: test-report
+            path: test-reports/
+  code-quality:
+    name: code-quality
     runs-on: ubuntu-latest
-    needs: job1
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      matrix:
+        language: [python]
     steps:
-        - name: Step 1    
-          run: |
-             pwd
-             ls -lrth
-
-        - name: Download artifact
-          uses: actions/download-artifact@v5.0.0
+        - name: checkout    
+          uses: actions/checkout@v5.0.0
+        - name: initialize codeql
+          uses: github/codeql-action/init@v3
           with:
-            name: my-artifact
-        - name: show artifact content
-          run: |
-              pwd
-              ls -lrth
-              cat myartifact.txt
-        - name: test exit
-          run: exit 0
-        - name: refference env variable
-          run: |
-            echo "[Info Running Deployment for $ENV_TYPE]:  with user : $APP_USER, on port: $APP_PORT"
-        - name: reffereing repository password
-          run: |
-            echo "The repository password is ${{ secrets.APP_PASSWORD }}"
-  job3:
-    name: job3
-    runs-on: ubuntu-latest
-    steps:
-        - name: reffering context or inbuilt variable 
-          run: |
-            echo "The repository name is ${{ github.repository }}"
-            echo "The event that triggered the workflow is ${{ github.event_name }}"
-            echo "The workflow run ID is ${{ github.run_id }}"
-            echo "The workflow run number is ${{ github.run_number }}"
-            echo "The actor that triggered the workflow is ${{ github.actor }}" 
-            echo "The workflow is running on branch ${{ github.ref_name }}"
-  STAGING:
-    name: STAGING Deployment
-    runs-on: ubuntu-latest
-    steps:
-        - name: refference env variable
-          run: |
-            echo "[Info Running Deployment on ${{vars.HOST}} for $ENV_TYPE]:  with user : ${{vars.USER}}, on port: "
-        - name: reffereing repository password
-          run: |
-            echo "The repository password is ${{ secrets.PASSWORD }}"
-    environment:
-      name: staging
-    if: github.ref == 'refs/heads/dev' || startsWith(github.ref, 'refs/heads/feature-')
-
-  PRODUCTION:
-    name: PRODUCTION Deployment
-    runs-on: ubuntu-latest
-    steps:
-        - name: refference env variable
-          run: |
-            echo "[Info Running Deployment on ${{vars.HOST}} for $ENV_TYPE]:  with user : ${{vars.USER}}, on port: "
-        - name: reffereing repository password
-          run: |
-            echo "The repository password is ${{ secrets.PASSWORD }}"
-    environment:
-      name: PROD
-    if: github.ref == 'refs/heads/main'
+            languages: ${{ matrix.language }}
+        - name: perform codeql analysis
+          uses: github/codeql-action/analyze@v3
+          with:
+            category: "security"
