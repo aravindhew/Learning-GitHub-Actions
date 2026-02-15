@@ -59,3 +59,34 @@ jobs:
           uses: github/codeql-action/analyze@v3
           with:
             category: "security"
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    outputs :
+     image-tag: ${{ steps.vars.outputs.IMAGE_TAG }}
+    steps:
+        - name: checkout    
+          uses: actions/checkout@v5.0.0
+        - name: docker buildx
+          uses: docker/setup-buildx-action@v3.0.0
+        - name: generate image tag
+          id: vars
+          run: |
+            IMAGE_TAG=thinknyx:${GITHUB_SHA::8} 
+            echo "IMAGE_TAG=thinknyx:${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
+        - name: build and push docker image
+          uses: docker/build-push-action@v4.0.0
+          with:
+            context: .
+            file: ./Dockerfile
+            push: true
+            tags: ${{ steps.vars.outputs.IMAGE_TAG }}  
+        - name: Save image tag to artifact
+          run: docker save ${{ steps.vars.outputs.IMAGE_TAG }} -o image.tar
+
+        - name: upload image artifact
+          uses: actions/upload-artifact@v5.0.0
+          with:
+            name: docker-image
+            path: image.tar
