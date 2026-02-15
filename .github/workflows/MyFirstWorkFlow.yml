@@ -2,8 +2,6 @@ name: my-first-workflow
 on:
   pull_request:
     branches:
-      - dev
-      - feature-*
       - main
   push:  
     branches:
@@ -13,6 +11,12 @@ on:
   schedule:
     - cron: '0 0 12 * *' # This will run the workflow every day at midnight
   workflow_dispatch: # This allows you to manually trigger the workflow from the GitHub Actions tab
+env:
+  ENV_TYPE: dev
+  APP_USER: thinknyx
+  APP_PORT: 80
+
+
 jobs:
   job1:
     name: job1
@@ -39,6 +43,7 @@ jobs:
           with:
             name: my-artifact   
             path: ./myartifact.txt
+        
 
   job2:
     name: job2
@@ -59,4 +64,50 @@ jobs:
               pwd
               ls -lrth
               cat myartifact.txt
+        - name: test exit
+          run: exit 0
+        - name: refference env variable
+          run: |
+            echo "[Info Running Deployment for $ENV_TYPE]:  with user : $APP_USER, on port: $APP_PORT"
+        - name: reffereing repository password
+          run: |
+            echo "The repository password is ${{ secrets.APP_PASSWORD }}"
+  job3:
+    name: job3
+    runs-on: ubuntu-latest
+    steps:
+        - name: reffering context or inbuilt variable 
+          run: |
+            echo "The repository name is ${{ github.repository }}"
+            echo "The event that triggered the workflow is ${{ github.event_name }}"
+            echo "The workflow run ID is ${{ github.run_id }}"
+            echo "The workflow run number is ${{ github.run_number }}"
+            echo "The actor that triggered the workflow is ${{ github.actor }}" 
+            echo "The workflow is running on branch ${{ github.ref_name }}"
+  STAGING:
+    name: STAGING Deployment
+    runs-on: ubuntu-latest
+    steps:
+        - name: refference env variable
+          run: |
+            echo "[Info Running Deployment on ${{vars.HOST}} for $ENV_TYPE]:  with user : ${{vars.USER}}, on port: "
+        - name: reffereing repository password
+          run: |
+            echo "The repository password is ${{ secrets.PASSWORD }}"
+    environment:
+      name: staging
+    if: github.ref == 'refs/heads/dev' || startsWith(github.ref, 'refs/heads/feature-')
 
+  PRODUCTION:
+    name: PRODUCTION Deployment
+    runs-on: ubuntu-latest
+    steps:
+        - name: refference env variable
+          run: |
+            echo "[Info Running Deployment on ${{vars.HOST}} for $ENV_TYPE]:  with user : ${{vars.USER}}, on port: "
+        - name: reffereing repository password
+          run: |
+            echo "The repository password is ${{ secrets.PASSWORD }}"
+    environment:
+      name: PROD
+    if: github.ref == 'refs/heads/main'
