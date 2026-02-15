@@ -72,3 +72,14 @@ jobs:
         - name: reffereing repository password
           run: |
             echo "The repository password is ${{ secrets.APP_PASSWORD }}"
+  job3:
+    name: job3
+    runs-on: ubuntu-latest
+    steps:
+        - name: reffering context or inbuilt variable 
+          run: |
+            echo "The repository name is ${{ github.repository }}"
+            echo "The event that triggered the workflow is ${{ github.event_name }}"
+            echo "The workflow run ID is ${{ github.run_id }}
+            echo "The workflow run number is ${{ github.run_number }}"
+            echo "The actor that triggered the workflow is ${{ github.actor }}"
