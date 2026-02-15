@@ -2,8 +2,6 @@ name: my-first-workflow
 on:
   pull_request:
     branches:
-      - dev
-      - feature-*
       - main
   push:  
     branches:
@@ -60,6 +58,6 @@ jobs:
               ls -lrth
               cat myartifact.txt
         - name: test exit
-          run: exit 1
+          run: exit 0
 
 
