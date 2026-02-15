@@ -96,6 +96,7 @@ jobs:
             echo "The repository password is ${{ secrets.PASSWORD }}"
     environment:
       name: staging
+    if: github.ref == 'refs/heads/dev' || startsWith(github.ref, 'refs/heads/feature-')
 
   PRODUCTION:
     name: PRODUCTION Deployment
@@ -109,3 +110,4 @@ jobs:
             echo "The repository password is ${{ secrets.PASSWORD }}"
     environment:
       name: PROD
+    if: github.ref == 'refs/heads/main'
