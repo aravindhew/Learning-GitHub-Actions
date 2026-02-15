@@ -1,5 +1,8 @@
 name: my-first-workflow
 on: 
+  pull_request:
+      branches:
+        - main
   push:  
   schedule:
     - cron: '0 0 12 * *' # This will run the workflow every day at midnight
