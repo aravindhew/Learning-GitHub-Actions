@@ -16,7 +16,6 @@ jobs:
     steps:
       - run: echo "Running Second Workflow"
 
-jobs:
   unit-test:
     name: unit-test
     runs-on: ubuntu-latest
