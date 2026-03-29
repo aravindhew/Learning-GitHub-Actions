@@ -123,3 +123,29 @@ jobs:
         with:
           name: docker-image
           path: image.tar          
+
+  artifact_test:
+    name: artifact-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: create a test file
+        run: |
+          echo "This is a test file" > test.txt
+      - name: upload test artifact
+        uses: actions/upload-artifact@v5.0.0
+        with:
+          name: test-artifact
+          path: test.txt
+  artifact_download:
+    name: artifact-download
+    runs-on: ubuntu-latest
+    needs: artifact_test
+    steps:
+      - name: download test artifact
+        uses: actions/download-artifact@v5.0.0
+        with:
+          name: test-artifact
+      
+      - name: display artifact content
+        run: |
+          cat test.txt
