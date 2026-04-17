@@ -123,7 +123,41 @@ jobs:
         with:
           name: docker-image
           path: image.tar          
+          
+  trivy-scan:
+    name: trivy-container-scan
+    runs-on: ubuntu-latest
+    needs: build                          # Wait for build job to finish
 
+    permissions:
+      security-events: write              # Required to upload SARIF
+      contents: read
+
+    steps:
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image              # Same name as upload in build job
+
+      - name: Load Docker image from tar
+        run: docker load -i image.tar
+
+      - name: Run Trivy container scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          input: image.tar                # Scan from local tar, not registry
+          format: sarif
+          output: trivy-container.sarif
+          severity: HIGH,CRITICAL
+          exit-code: '0'                  # Non-blocking; change to '1' to fail pipeline
+
+      - name: Upload SARIF to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-container.sarif
+          category: trivy-container       # Label shown in Security tab
+        if: always()                      # Upload even if scan finds vulnerabilities
+      
   artifact_test:
     name: artifact-test
     runs-on: ubuntu-latest
