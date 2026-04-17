@@ -123,7 +123,7 @@ jobs:
         with:
           name: docker-image
           path: image.tar          
-          
+
   trivy-scan:
     name: trivy-container-scan
     runs-on: ubuntu-latest
@@ -148,7 +148,8 @@ jobs:
           input: image.tar                # Scan from local tar, not registry
           format: sarif
           output: trivy-container.sarif
-          severity: HIGH,CRITICAL
+          #severity: HIGH,CRITICAL
+          severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
           exit-code: '0'                  # Non-blocking; change to '1' to fail pipeline
 
       - name: Upload SARIF to GitHub Security tab
