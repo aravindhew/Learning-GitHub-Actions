@@ -151,7 +151,9 @@ jobs:
           #severity: HIGH,CRITICAL
           severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
           exit-code: '0'                  # Non-blocking; change to '1' to fail pipeline
-
+      - name: Debug Trivy output
+        run: |
+          trivy image --input image.tar --severity LOW,MEDIUM,HIGH,CRITICAL
       - name: Upload SARIF to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
